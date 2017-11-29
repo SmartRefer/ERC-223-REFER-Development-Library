@@ -1,15 +1,15 @@
 pragma solidity ^0.4.17;
 import "../abstract-classes/erc223-crowdsale.sol";
-import "../tokens/basic-token.sol";
+import "../tokens/mintable-token.sol";
 import "../abstract-classes/erc223-receiver.sol";
 
-contract basicCrowdsale is CrowdSale {
+contract mintableCrowdsale is CrowdSale {
     //State
-    basicToken public _token;
+    mintableToken public _token;
     
     //Constructor overrides Crowdsale constructor
-    function basicCrowdsale(uint256 startTime, uint256 endTime, address wallet, string symbol, string name, uint8 decimals, uint256 totalSupply) public CrowdSale(startTime, endTime, wallet) {
-        _token = new basicToken(symbol, name, decimals, totalSupply);
+    function mintableCrowdsale(uint256 startTime, uint256 endTime, address wallet, string symbol, string name, uint8 decimals) public CrowdSale(startTime, endTime, wallet) {
+        _token = new mintableToken(symbol, name, decimals);
     }
     
     function getRate() public view returns(uint256) {
@@ -39,8 +39,8 @@ contract basicCrowdsale is CrowdSale {
         
         //Find out how many tokens we are going to send to the user
         uint256 amount = weiAmount.mul(rate);
-        // transfer tokens to the purson who is buying the tokens
-        _token.transfer(receiver, amount);
+        //Mint the tokens.
+        _token.mint(receiver, amount);
         //Use TokenPurchase event to log 
         TokenPurchase(msg.sender, receiver, weiAmount, amount);
         return true;
@@ -55,16 +55,7 @@ contract basicCrowdsale is CrowdSale {
         require(!isFinalized);
         //Safety Check : make sure current time is passed set end time of crowdsale
         require(now > _endTime);
-        
-        //Finalize mechanism : if there are tokens remaining, burn them.
-        uint256 remaining = _token.balanceOf(owner);
-        if (remaining > 0) {
-            _token.burn(remaining);
-        }
         isFinalized = true;
         return true;
-
     }
-
-
 }

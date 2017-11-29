@@ -21,7 +21,7 @@ contract('mintableTokenMock', function(accounts) {
       const ownerAddress = owner.logs[0].args.owner.valueOf()
 
       assert.equal(result.logs[0].event, 'Mint');
-      assert.equal(result.logs[0].args.reciever.valueOf(), accounts[2]);
+      assert.equal(result.logs[0].args.receiver.valueOf(), accounts[2]);
       assert.equal(result.logs[0].args.amount.valueOf(), 100);
       assert.equal(result.logs[1].event, 'Transfer');
       assert.equal(result.logs[1].args.sender.valueOf(), ownerAddress);
@@ -40,7 +40,7 @@ contract('mintableTokenMock', function(accounts) {
       const ownerAddress = owner.logs[0].args.owner.valueOf()
 
       assert.equal(result.logs[0].event, 'Mint');
-      assert.equal(result.logs[0].args.reciever.valueOf(), accounts[1]);
+      assert.equal(result.logs[0].args.receiver.valueOf(), accounts[1]);
       assert.equal(result.logs[0].args.amount.valueOf(), 200);
       assert.equal(result.logs[1].event, 'Transfer');
       assert.equal(result.logs[1].args.sender.valueOf(), ownerAddress);
