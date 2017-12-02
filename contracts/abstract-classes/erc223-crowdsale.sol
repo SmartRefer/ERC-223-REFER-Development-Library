@@ -1,5 +1,4 @@
-pragma solidity ^0.4.17;
-import "./token-interface.sol";
+pragma solidity ^0.4.18;
 import "./erc223-basic.sol";
 import "../libraries/SafeMath.sol";
 import "../tokens/basic-token.sol";
@@ -10,21 +9,22 @@ import "../tokens/basic-token.sol";
  * @dev to create a crowd sale, extend this contract
  */
 contract CrowdSale {
-    using SafeMath for uint256;
+    using SafeMath
+    for uint256;
 
     //State
     uint256 public _startTime;
     uint256 public _endTime;
-    uint8 public _stage;
     address public _wallet;
+    address public _owner;
     uint256 public _weiRaised;
     bool public isFinalized = false;
-    
+
     /*
      * @dev this function returns the rate of how many tokens are given to cutomers per wei
      * @returns unit256 value that shows the current rate of tokens/wei
      */
-    
+
     function getRate() public view returns(uint256);
 
 
@@ -52,28 +52,47 @@ contract CrowdSale {
      * @params uint256 endTime represents when the CrowdSale ends
      * @params address wallet represents a wallet address in which all the funds are accumulated
      */
-     
-    function CrowdSale(uint256 startTime, uint256 endTime, address wallet) internal {
-        require(_startTime >= now);
-        require(_endTime >= _startTime);
-        require(_wallet != 0x0);
-        startTime = _startTime;
-        endTime = _endTime;
-        wallet = _wallet;
+    //Todo make internal
+    function CrowdSale(uint256 startTime, uint256 endTime, address wallet) public {
+
+        if (startTime < now) {
+            revert();
+        } else if (endTime < now || endTime < startTime) {
+            revert();
+        } else if (wallet == 0x0 || wallet == address(0)) {
+            revert();
+        } else {
+            _startTime = startTime;
+            _endTime = endTime;
+            _wallet = wallet;
+            _owner = msg.sender;
+        }
+
+
     }
+
 
 
     /*
      * @dev this function checks to make sure some basic constraints of a crowdsale is met
      * @returns a boolean value indicating success or failure of this operation
      */
-     
+
     function validPurchase() internal view returns(bool) {
-        require(_startTime <= now);
-        require(_endTime >= now);
-        require(!isFinalized);
-        require(msg.value != 0);
-        return true;
+
+        if (_startTime > now) {
+            revert();
+        } else if (_endTime < now || _endTime <= _startTime) {
+            revert();
+        } else if (isFinalized == true) {
+            revert();
+        } else if (msg.value == 0) {
+            revert();
+        } else {
+
+            return true;
+        }
+
 
     }
 
@@ -81,12 +100,27 @@ contract CrowdSale {
      * @dev this function is called when the contract recieves ethers. it would call buyTokens() functon 
      */
     function() public payable {
+        validPurchase();
         buyTokens(msg.sender);
     }
 
+    //Todo : Comment this function out
+    function printState() public returns(bool) {
+        PrintInt(now);
+        PrintInt(_startTime);
+        PrintInt(_endTime);
+        PrintAddress(_wallet);
+
+        PrintInt(_weiRaised);
+        PrintBool(isFinalized);
+        return true;
+    }
     event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount);
+    event Finalize (bool finalized , uint256 burned);
+    //Todo : comment the following events out
+    event PrintInt(uint256 value);
+    event PrintInt8(uint8 value);
+    event PrintAddress(address value);
+    event PrintBool(bool value);
 
 }
-
-
-

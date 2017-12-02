@@ -1,5 +1,4 @@
 pragma solidity ^0.4.17;
-import "./token-interface.sol";
 import "./erc223-basic.sol";
 /*
  * @title Mintable token
@@ -7,7 +6,7 @@ import "./erc223-basic.sol";
  * the total amount in circlation is not created initially. 
  * Tokens are minted as users purchase them during the crowdsale.
  */
-contract abstractMintableToken is Token, abstractBasicToken {
+contract abstractMintableToken is  abstractBasicToken {
     /*
      *@dev this is the function that mints Tokens. 
      *@dev This function does not know the ration of how many tokens get minted per wei.

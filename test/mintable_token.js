@@ -3,9 +3,9 @@
 
 const assertJump = require('./helpers/assertJump');
 
-var mintableTokenMock = artifacts.require("./test/mintableTokenMock.sol");
+var mintableTokenMock = artifacts.require("mintableTokenMock");
 
-contract('mintableTokenMock', function(accounts) {
+contract('mintableTokenTest', function(accounts) {
   let token
   beforeEach(async function() {
      token = await mintableTokenMock.new(accounts[0],"MNT","Mintable Token",18);

@@ -6,6 +6,7 @@ import "../abstract-classes/erc223-receiver.sol";
 import "./basic-token.sol";
 
 contract mintableToken is abstractMintableToken {
+
     function mintableToken(string symbol, string name, uint8 decimals) public {
         _symbol = symbol;
         _name = name;
@@ -13,6 +14,7 @@ contract mintableToken is abstractMintableToken {
         _owner = msg.sender;
         //set the initial total supply to zero
         _totalSupply = 0;
+
     }
 
     function getOwner() public returns(address) {
@@ -32,46 +34,71 @@ contract mintableToken is abstractMintableToken {
 
     function mint(address receiver, uint256 amount) public returns(bool) {
         // only owner can mint
-        require(_owner == msg.sender);
+        if(_owner != msg.sender)
+        {
+            revert();
+        }
+
         //Cannot send the newly minted tokens to get burnt
-        require(receiver != 0x0);
-        //Should not send the newly minted tokens to contracts
-        //Question : Should it?
-        require(!isContract(receiver));
-        //Question : Should it be empty ?
-        bytes memory empty;
-        
-        
-        _totalSupply = _totalSupply.add(amount);
-        _balances[receiver] = _balances[receiver].add(amount);
-        //Log event through calling Mint
-        Mint(receiver, amount);
-        Transfer(msg.sender, receiver, amount, empty);
-        return true;
+        else if (receiver == 0x0)
+        {
+            revert();
+        }
+        else if(reciever == address(0))
+        {
+            revert();
+        }
+        else
+        {
+            //Question : Should it be empty ?
+            bytes memory empty;
+            _totalSupply = _totalSupply.add(amount);
+            _balances[receiver] = _balances[receiver].add(amount);
+            if (isContract(receiver)) {
+                abstractReciever receiverContract = abstractReciever(receiver);
+                receiverContract.tokenFallback(msg.sender, amount, data);
+            }
+            //Log event through calling Mint
+            Mint(receiver, amount);
+            return true;
+        }
     }
 
     function transfer(address receiver, uint256 amount, bytes data) public returns(bool) {
 
         // Throw an error and fail if If balnce of sender is smaller than the amount of tokens sender has.
+         // Throw an error and fail if If balnce of sender is smaller than the amount of tokens sender has.
+        
         // Question : Should I make it larger than or equal ??
-        require(balanceOf(msg.sender) > amount);
-        require(receiver != 0x0);
-        
-        
-        //subtrack the amount of tokens from sender
-        _balances[msg.sender] = _balances[msg.sender].sub(amount);
-        //Add those tokens to reciever
-        _balances[receiver] = _balances[receiver].add(amount);
-
-        //If reciever is a contract ...
-        if (isContract(receiver)) {
-            abstractReciever receiverContract = abstractReciever(receiver);
-            receiverContract.tokenFallback(msg.sender, amount, data);
-
+        if(balanceOf(msg.sender) < amount)
+        {
+            revert();
         }
-        Transfer(msg.sender, receiver, amount, data);
-        return true;
-
+        else if (receiver == 0x0)
+        {
+            revert();
+        }
+        else if(receiver==address(0))
+        {
+            revert();
+        }
+        
+        else
+        {
+            //subtrack the amount of tokens from sender
+            _balances[msg.sender] = _balances[msg.sender].sub(amount);
+            //Add those tokens to reciever
+            _balances[receiver] = _balances[receiver].add(amount);
+    
+            //If reciever is a contract ...
+            if (isContract(receiver)) {
+                abstractReciever receiverContract = abstractReciever(receiver);
+                receiverContract.tokenFallback(msg.sender, amount, data);
+    
+            }
+            Transfer(msg.sender, receiver, amount, data);
+            return true;
+        }
     }
 
     function transfer(address receiver, uint256 amount) public returns(bool) {
@@ -87,17 +114,25 @@ contract mintableToken is abstractMintableToken {
 
     function burn(uint256 amount) public returns(bool) {
         //Safety check : amount of tokens being burned have to be larger than 0
-        require(amount > 0);
+        if (amount<=0)
+        {
+            revert();
+        }
         //Safty check : token owner cannot burn more than the amount currently exists in their address
-        require(_balances[msg.sender] >= amount);
-        
-        //burn operation :
-        _balances[msg.sender] = _balances[msg.sender].sub(amount);
-        _totalSupply = _totalSupply.sub(amount);
-        //Question : should i call Transfer event with address 0x0 instead ? 
-        //Call Burn event to log
-        Burn(msg.sender, amount);
-        return true;
+        else if(_balances[msg.sender] < amount)
+        {
+            revert();
+        }
+        else
+        {
+            //burn operation :
+            _balances[msg.sender] = _balances[msg.sender].sub(amount);
+            _totalSupply = _totalSupply.sub(amount);
+            //Question : should i call Transfer event with address 0x0 instead ? 
+            //Call Burn event to log
+            Burn(msg.sender, amount);
+            return true;
+        }
     }
 
     //private functions
