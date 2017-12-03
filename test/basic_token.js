@@ -27,8 +27,8 @@ contract('basicTokenTest', function(accounts) {
     const transfer = await token.transfer(accounts[1], 200, {from:token_owner});
     const firstAccountBalance = await token.balanceOf(token_owner);
     const secondAccountBalance = await token.balanceOf(accounts[1]);
-    secondAccountBalance.should.be.bignumber.equal(new BigNumber(200));
     firstAccountBalance.should.be.bignumber.equal(new BigNumber(300));
+    secondAccountBalance.should.be.bignumber.equal(new BigNumber(200));
   });
   it("should return currect owner balance after owner burning 100 tokens", async function() {
     await token.burn(100,{from:token_owner});
@@ -62,21 +62,21 @@ contract('basicTokenTest', function(accounts) {
   });
   */
   it('should throw an error when trying to transfer more than balance', async function() {
-    await token.transfer(accounts[1], 501)
+    await token.transfer(accounts[1], 501,{ from: token_owner })
         .should.be.rejectedWith('invalid opcode')
   });
 
   it('should throw an error when trying to transfer to 0x0', async function() {
-      await token.transfer(0x0, 100)
+      await token.transfer(0x0, 100,{ from: token_owner })
         .should.be.rejectedWith('invalid opcode')
-    
+
   });
   it('should throw an error when trying to burn 0 or smaller amount of tokens', async function() {
     this.timeout(4500000);
     await token.transfer(accounts[1], 200,{from:token_owner});
       await token.burn(0, { from: accounts[1] })
         .should.be.rejectedWith('invalid opcode')
-  
+
   });
 
   it('should throw an error when trying to burn more than owners balance', async function() {

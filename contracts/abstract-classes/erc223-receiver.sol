@@ -1,4 +1,4 @@
-pragma solidity ^0.4.17;
+pragma solidity ^0.4.18;
 /*@title Receiver contract Abstract Class
  *@dev this is an abstract class that is the building block of any contract that is supposed to recieve ERC223 token
  */

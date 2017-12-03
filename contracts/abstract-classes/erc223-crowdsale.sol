@@ -82,14 +82,25 @@ contract CrowdSale {
 
         if (_startTime > now) {
             revert();
-        } else if (_endTime < now || _endTime <= _startTime) {
-            revert();
-        } else if (isFinalized == true) {
-            revert();
-        } else if (msg.value == 0) {
-            revert();
-        } else {
+        }
 
+        else if (_endTime < now ) {
+            revert();
+        }
+        else if( _endTime <= _startTime)
+        {
+          revert();
+        }
+        else if (isFinalized == true)
+        {
+            revert();
+        }
+        else if (msg.value == 0)
+        {
+            revert();
+        }
+        else
+        {
             return true;
         }
 
@@ -97,7 +108,7 @@ contract CrowdSale {
     }
 
     /*
-     * @dev this function is called when the contract recieves ethers. it would call buyTokens() functon 
+     * @dev this function is called when the contract recieves ethers. it would call buyTokens() functon
      */
     function() public payable {
         validPurchase();

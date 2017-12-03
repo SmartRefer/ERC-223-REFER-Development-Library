@@ -41,28 +41,28 @@ contract('mintableCrowdsaleTest', function(accounts) {
             _endTime,
             reciever_wallet,
             "MNT","Mintable Token", 18,
-           
+
             {from: contract_owner})
         _mintableToken = mintableToken.at(await _mintableCrowdsale._token())
     })
     it("Accounts[5] should be crowdsale owner", async function() {
-      
+
         const ownerAddress = await _mintableCrowdsale._owner()
         ownerAddress.should.equal(contract_owner)
-    
+
     })
     it('should be token owner', async function() {
         const owner = await _mintableToken.getOwner()
         const ownerAddress = owner.logs[0].args.owner.valueOf()
         ownerAddress.should.equal(_mintableCrowdsale.address)
-    
+
     })
     it('Initally should have a total supply of zero', async function () {
-    
+
       const totalSupply = await _mintableToken.totalSupply()
       totalSupply.should.be.bignumber.equal(new BigNumber(0))
     })
-    it('should reject payments before start - contract fallback function', async function () 
+    it('should reject payments before start - contract fallback function', async function ()
       {
 
         await _mintableCrowdsale.send(value)
@@ -70,7 +70,7 @@ contract('mintableCrowdsaleTest', function(accounts) {
 
       })
 
-    it('should reject payments before start - buyTokens()', async function () 
+    it('should reject payments before start - buyTokens()', async function ()
       {
 
         await _mintableCrowdsale.buyTokens(purchaser, {from: sponsor, value: value})
@@ -123,7 +123,7 @@ contract('mintableCrowdsaleTest', function(accounts) {
       event.args.value.should.be.bignumber.equal(value)
       event.args.amount.should.be.bignumber.equal(ReturnTokensAmount)
     })
-    
+
     it('should transfer tokens to buyer -contract fallback function ', async function () {
       await increaseTimeTo(_startTime)
       await _mintableCrowdsale.send(value)
@@ -156,7 +156,7 @@ contract('mintableCrowdsaleTest', function(accounts) {
       TotalSupplyAfterTransfer.minus(InitialTotalSupply).should.be.bignumber.equal(ReturnTokensAmount);
     })
     it('should have the current amount of tokens in buyers address after sale ', async function () {
-     
+
       await increaseTimeTo(_startTime)
       const InitialOwnerBalance = new BigNumber((await _mintableToken.balanceOf(accounts[0])))
       await _mintableCrowdsale.send(value)
@@ -164,27 +164,74 @@ contract('mintableCrowdsaleTest', function(accounts) {
       const ReturnTokensAmount = new BigNumber(value*50);
       OwnerBalanceAfterTransfer.minus(InitialOwnerBalance).should.be.bignumber.equal(ReturnTokensAmount);
     })
-    it('should perform finalise function properly ', async function () {
-      const owner = await _mintableToken.getOwner()
-      const ownerAddress = owner.logs[0].args.owner.valueOf()
-      const InitialOwnerBalance = new BigNumber(await _mintableToken.balanceOf(ownerAddress))
-      await increaseTimeTo(_startTime)
-      await _mintableCrowdsale.send(value)
-      const OwnerBalanceAfterTransfer = new BigNumber(await _mintableToken.balanceOf(ownerAddress))
-      const InitialRecieverBalance = new BigNumber(await _mintableToken.balanceOf(accounts[0]))
 
-      await increaseTimeTo(_afterEndTime)
-      
-      const {logs} = await _mintableCrowdsale.finalize({from:contract_owner})
-      const finalized  = await _mintableCrowdsale.isFinalized();
-      const FinalOwnerBalance = new BigNumber(await _mintableToken.balanceOf(ownerAddress))
-      const FinalRecieverBalance = new BigNumber(await _mintableToken.balanceOf(accounts[0]))
+    describe('After crowdsale is over', function () {
+      let owner;
+      let ownerAddress ;
+      let InitialOwnerBalance ;
+      let OwnerBalanceAfterTransfer;
+      let RecieverOneBalance;
+      let RecieverTwoBalance;
+      beforeEach(async function(){
+        owner = await _mintableToken.getOwner()
+        ownerAddress = owner.logs[0].args.owner.valueOf()
+        await increaseTimeTo(_startTime)
+        await _mintableCrowdsale.sendTransaction({from:accounts[6], to:_mintableCrowdsale.address, value: value})
+        await _mintableCrowdsale.sendTransaction({from:accounts[7], to:_mintableCrowdsale.address, value: 2*value})
+        OwnerBalanceAfterTransfer = new BigNumber(await _mintableToken.balanceOf(ownerAddress))
+        await increaseTimeTo(_afterEndTime)
+      });
+      it('should emit currect Events ', async function () {
+        let {logs} = await _mintableCrowdsale.finalize({from:contract_owner})
+        const finalized  = await _mintableCrowdsale.isFinalized();
+        InitialOwnerBalance = new BigNumber(await _mintableToken.balanceOf(ownerAddress))
+        const FinalOwnerBalance = new BigNumber(await _mintableToken.balanceOf(ownerAddress))
+        const event = logs.find(e => e.event === 'Finalize')
+        should.exist(event)
+        event.args.finalized.should.equal(finalized)
+        event.args.burned.should.be.bignumber.equal(OwnerBalanceAfterTransfer)
+      })
 
-      const event = logs.find(e => e.event === 'Finalize')
-      should.exist(event)
-      event.args.finalized.should.equal(finalized)
-      event.args.burned.should.be.bignumber.equal(OwnerBalanceAfterTransfer)
-      FinalOwnerBalance.should.be.bignumber.equal(new BigNumber(0));
-      FinalRecieverBalance.should.be.bignumber.equal(InitialRecieverBalance);
+      it('should not accept any more ethers ', async function () {
+        await _mintableCrowdsale.finalize({from:contract_owner})
+           await _mintableCrowdsale.buyTokens(purchaser,{value: value, from: purchaser})
+           .should.be.rejected
+           await _mintableCrowdsale.sendTransaction({from:accounts[8], to:_mintableCrowdsale.address, value: value})
+            .should.be.rejected;
+      })
+      it('token owner (crowdsale contract) should have 0 tokens ', async function () {
+        await _mintableCrowdsale.finalize({from:contract_owner})
+        const FinalOwnerBalance = new BigNumber(await _mintableToken.balanceOf(ownerAddress))
+        FinalOwnerBalance.should.be.bignumber.equal(new BigNumber(0));
+      })
+
+      it('Accounts[6] and Accounts[7] should have the currect balance ', async function () {
+        await _mintableCrowdsale.finalize({from:contract_owner})
+        const FinalRecieverOneBalance  = new BigNumber(await _mintableToken.balanceOf(accounts[6]));
+        const FinalRecieverTwoBalance = new BigNumber(await _mintableToken.balanceOf(accounts[7]));
+        FinalRecieverOneBalance.should.be.bignumber.equal(new BigNumber(value*50));
+        FinalRecieverTwoBalance.should.be.bignumber.equal(new BigNumber(2*value*50));
+      })
+      it('should show the current total number of tokens in circulation',async function(){
+        await _mintableCrowdsale.finalize({from:contract_owner})
+        const ReturnTokensAmount = new BigNumber(3*value*50);
+        const totalSupply = await _mintableToken.totalSupply();
+        totalSupply.should.be.bignumber.equal(ReturnTokensAmount);
+      })
+      it('Tokens should transfer without an issues after finalise() function ', async function () {
+      await _mintableCrowdsale.finalize({from:contract_owner})
+       await _mintableToken.transfer(accounts[8],50, {from:accounts[7]});
+        const firstAccountBalance = await _mintableToken.balanceOf(accounts[7]);
+        const secondAccountBalance = await _mintableToken.balanceOf(accounts[8]);
+        assert(secondAccountBalance,50)
+        assert(firstAccountBalance,199999999999999999950)
+      })
+      it('Should fails when transfering from an acount that does not have any tokens ', async function () {
+      await _mintableCrowdsale.finalize({from:contract_owner})
+          await _mintableToken.transfer(accounts[6],50, {from:accounts[9]})
+             .should.be.rejected;
+      })
     })
+
+
 })

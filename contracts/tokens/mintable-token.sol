@@ -1,4 +1,4 @@
-pragma solidity ^0.4.17;
+pragma solidity ^0.4.18;
 
 
 import "../abstract-classes/erc223-mintable-token.sol";
@@ -44,7 +44,7 @@ contract mintableToken is abstractMintableToken {
         {
             revert();
         }
-        else if(reciever == address(0))
+        else if(receiver == address(0))
         {
             revert();
         }
@@ -56,7 +56,7 @@ contract mintableToken is abstractMintableToken {
             _balances[receiver] = _balances[receiver].add(amount);
             if (isContract(receiver)) {
                 abstractReciever receiverContract = abstractReciever(receiver);
-                receiverContract.tokenFallback(msg.sender, amount, data);
+                receiverContract.tokenFallback(msg.sender, amount, empty);
             }
             //Log event through calling Mint
             Mint(receiver, amount);
@@ -68,7 +68,7 @@ contract mintableToken is abstractMintableToken {
 
         // Throw an error and fail if If balnce of sender is smaller than the amount of tokens sender has.
          // Throw an error and fail if If balnce of sender is smaller than the amount of tokens sender has.
-        
+
         // Question : Should I make it larger than or equal ??
         if(balanceOf(msg.sender) < amount)
         {
@@ -82,19 +82,19 @@ contract mintableToken is abstractMintableToken {
         {
             revert();
         }
-        
+
         else
         {
             //subtrack the amount of tokens from sender
             _balances[msg.sender] = _balances[msg.sender].sub(amount);
             //Add those tokens to reciever
             _balances[receiver] = _balances[receiver].add(amount);
-    
+
             //If reciever is a contract ...
             if (isContract(receiver)) {
                 abstractReciever receiverContract = abstractReciever(receiver);
                 receiverContract.tokenFallback(msg.sender, amount, data);
-    
+
             }
             Transfer(msg.sender, receiver, amount, data);
             return true;
@@ -128,7 +128,7 @@ contract mintableToken is abstractMintableToken {
             //burn operation :
             _balances[msg.sender] = _balances[msg.sender].sub(amount);
             _totalSupply = _totalSupply.sub(amount);
-            //Question : should i call Transfer event with address 0x0 instead ? 
+            //Question : should i call Transfer event with address 0x0 instead ?
             //Call Burn event to log
             Burn(msg.sender, amount);
             return true;
