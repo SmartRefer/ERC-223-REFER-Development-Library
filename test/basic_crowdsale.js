@@ -5,8 +5,7 @@ import {
     duration,
     increaseTimeTo
 } from './helpers/crowdsale-helper'
-import EVMRevert from './helpers/EVMRevert'
-
+'use strict';
 const BigNumber = web3.BigNumber
 const should = require('chai')
     .use(require('chai-as-promised'))

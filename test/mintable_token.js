@@ -1,8 +1,6 @@
 
-// 'use strict';
-//
-// const assertJump = require('./helpers/assertJump');
-// var mintableTokenMock = artifacts.require("mintableTokenMock");
+'use strict';
+
 const BigNumber = web3.BigNumber
 const should = require('chai')
     .use(require('chai-as-promised'))
