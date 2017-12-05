@@ -19,15 +19,21 @@ For instance, when users send the tokens to the token's contract by mistake, the
 * By researching more than 15 ICOs, we took note of the most common patterns and design choices; we have implemented them in this library. 
 * Our library and tokens are fully backward compatible with the ERC20 standard; we decided to run a rewritten version of Zeppelin Solution test cases on our library to confirm that. 
 # How to use
-* Smart contracts in [] folder are all abstract contracts, and most of the comments are in those files. If you are using this library as learning material, go to that folder first, understand what is the purpose of each function and afterward start implementing it yourself. Make sure to run the tests to make sure your implementation is correct.
-* Smart contracts in [] folder are how I decided to implement the abstract functions. 
+* Smart contracts in "abstract-classes" folder are all abstract contracts, and most of the comments are in those files. If you are using this library as learning material, go to that folder first, understand what is the purpose of each function and afterward start implementing it yourself. Make sure to run the tests to make sure your implementation is correct.
+* Smart contracts in the other folders are how I decided to implement the abstract functions. 
 * We decided to create two token type and corresponding crowdsale boilerplates:
   * Token smart contracts are designed and initialized inside Crowdsale smart contracts.
   * Basic Token and Basic Crowdsale: In this token, you would set the total number of tokens in Tokens constructor. After the crowdsale is over, the Crowdsale contract's owner has to call Crowdsale contract's finalize() function, burning any remaining tokens.Only Crowdsale contract's owner is allowed to call that function.A suggestion is to use Oraclize or Ethereum Alarm clock to call this function after ICO is over automatically.
   * Mintable Token and Mintable Crowdsale: In this token type, initially, the total number of tokens is set to zero. As the Mintable crowdsale receives Ether, it would invoke Mintable Tokens Mint() function to create tokens; this would eliminate the need for burning the remaining tokens after the crowdsale is over. Also, it should be noted that only mintable token's owner ( Mintable Crowdsale smart contract ) is allowed to call the Mint() function.
 # Todo
-- [ ] Some housekeeping on the Tests
-- [ ] Implementation of a token escrow contract
+- [x] Basic Token
+- [x] Basic Token crowdsale
+- [x] Mintable token
+- [x] Mintable token crowdsale
+- [x] re-write Zeppelin solution tests and confirm erc20 compatiblity
+- [x] Implementation of a token safe conract (token lock-up mechanism) as an example of an ERC223 reciever contract
+- [x] Token Safe tests.
+- [x] Some housekeeping on the tests
 # Credit
 * Zeppelin Solutions: https://github.com/OpenZeppelin/zeppelin-solidity
 * @Dexaran ERC223 Proposal: https://github.com/Dexaran/ERC223-token-standard
