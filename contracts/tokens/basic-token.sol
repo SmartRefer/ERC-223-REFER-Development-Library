@@ -45,18 +45,22 @@ contract basicToken is abstractBasicToken {
             _balances[msg.sender] = _balances[msg.sender].sub(amount);
             //Add those tokens to reciever
             _balances[receiver] = _balances[receiver].add(amount);
-            
+
             //If reciever is a contract ...
             if (isContract(receiver)) {
                 abstractReciever receiverContract = abstractReciever(receiver);
                 //Invoke the call back function on the reciever contract
                 receiverContract.tokenFallback(msg.sender, amount, data);
+
             }
-            //Call Transfer event to log. 
+            //Call Transfer event to log.
             Transfer(msg.sender, receiver, amount, data);
             return true;
         }
     }
+
+
+
 
     function transfer(address receiver, uint256 amount) public returns(bool) {
         bytes memory empty;
@@ -84,8 +88,8 @@ contract basicToken is abstractBasicToken {
             //burn operation :
             _balances[msg.sender] = _balances[msg.sender].sub(amount);
             _totalSupply = _totalSupply.sub(amount);
-           
-            //Question : should i call Transfer event with address 0x0 instead ? 
+
+            //Question : should i call Transfer event with address 0x0 instead ?
             //Call Burn event to log
             Burn(msg.sender, amount);
             return true;

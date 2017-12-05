@@ -9,8 +9,7 @@ import "../tokens/basic-token.sol";
  * @dev to create a crowd sale, extend this contract
  */
 contract CrowdSale {
-    using SafeMath
-    for uint256;
+    using SafeMath for uint256;
 
     //State
     uint256 public _startTime;
