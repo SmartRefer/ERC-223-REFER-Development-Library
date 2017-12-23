@@ -1,5 +1,5 @@
-Crowdsale factory is a collection of smart contracts made for ICOs based on the ERC223 standard.
-Before launching our ICO, we did an exhaustive technical research on different patterns of launching an ICO, different token types and most common issues ICO encountered. Currently, there are no ICO boilerplates based on the ERC223 standard. We built this library to help other projects fast-track launching ICO based on ERC223 standard proposed by @dexaran. Our code was heavily inspired by Zeppelin Solutions library.
+SmartRefer's Crowdsale Factory is a collection of smart contracts made for Ethereum-based crowdsales using the ERC223 standard.
+Before launching our platform's Pre-Sale, we did exhaustive technical research on different patterns of launching various crowdsales, different contract types and the most common issues encountered. Currently, there are no crowdsale boilerplates based on the ERC223 standard. We built the world's first comprehensive ERC223 library to help other Ethereum-based projects fast-track their development. Based on ERC223 standard proposed by @dexaran. Our code was heavily inspired by Zeppelin Solutions library.
 
 We tried to be as thorough as possible while writing comments so that this could be a valuable learning resource for programmers transition into learning solidity.
 # Advantages
@@ -16,8 +16,8 @@ For instance, when users send the tokens to the token's contract by mistake, the
   
   
 #### Only The Essential Smart Contracts 
-* By researching more than 15 ICOs, we took note of the most common patterns and design choices; we have implemented them in this library. 
-* Our library and tokens are fully backward compatible with the ERC20 standard; we decided to run a rewritten version of Zeppelin Solution test cases on our library to confirm that. 
+* By researching more than 15 crowdsales, we took note of the most common patterns and design choices. We have completely restructured, and implemented them in our library. 
+* Our library and contracts are fully backward compatible with the ERC20 standard; we decided to run a rewritten version of Zeppelin Solution test cases on our library to confirm that. 
 # How to use
 * Smart contracts in "abstract-classes" folder are all abstract contracts, and most of the comments are in those files. If you are using this library as learning material, go to that folder first, understand what is the purpose of each function and afterward start implementing it yourself. Make sure to run the tests to make sure your implementation is correct.
 * Smart contracts in the other folders are how I decided to implement the abstract functions. 
