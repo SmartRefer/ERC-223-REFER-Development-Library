@@ -16,6 +16,7 @@ import "./implementation/mintable-token.sol";
 contract token{
     tokenInterface private _token;
     address private _owner;
+    bool private _finalized = false;
     function token(string symbol, string name, uint8 decimals, uint256 totalSupply)
     {
       _owner = msg.sender;
@@ -111,6 +112,10 @@ contract token{
       {
         revert();
       }
+      else if(_finalized==true)
+      {
+        revert();
+      }
       else
       {
         bool result = _token.mint(address(this),receiver,amount);
@@ -144,8 +149,13 @@ contract token{
       {
         revert();
       }
+      else if(_finalized==true)
+      {
+        revert();
+      }
       else
       {
+        _finalized=true;
         uint256 remaining = _token.balanceOf(address(this));
         _token.burn(address(this),remaining);
         return true;

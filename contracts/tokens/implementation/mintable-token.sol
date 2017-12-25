@@ -18,55 +18,23 @@ contract mintable is tokenInterface {
         _owner = msg.sender;
         _totalSupply = 0;
     }
-    function get_address() returns (address) {
-      if(msg.sender!=_owner)
-      {
-        revert();
-      }
-      else
-      {
+    function get_address() public onlyOwner returns (address) {
         return address(this);
-      }
     }
-    function getOwner() public returns(address) {
-      if(msg.sender!=_owner)
-      {
-        revert();
-      }
-      else
-      {
+    function getOwner() public onlyOwner returns(address) {
         return _owner;
-      }
     }
 
-    function balanceOf(address addr) public view returns(uint256) {
-      if(msg.sender!=_owner)
-      {
-        revert();
-      }
-      else
-      {
+    function balanceOf(address addr) public view onlyOwner returns(uint256) {
         return _balances[addr];
-      }
     }
 
-    function totalSupply() public view returns(uint256) {
-      if(msg.sender!=_owner)
-      {
-        revert();
-      }
-      else
-      {
+    function totalSupply() public view onlyOwner returns(uint256) {
         return _totalSupply;
-      }
     }
 
-    function mint(address tokenAddress, address receiver, uint256 amount) public returns(bool) {
-      if(msg.sender!=_owner)
-      {
-        revert();
-      }
-      else if(_owner != tokenAddress)
+    function mint(address tokenAddress, address receiver, uint256 amount) public onlyOwner returns(bool) {
+      if(_owner != tokenAddress)
         {
             revert();
         }
@@ -93,12 +61,8 @@ contract mintable is tokenInterface {
         }
     }
 
-    function transfer(address sender,address receiver, uint256 amount, bytes data) public returns(bool) {
-      if(msg.sender!=_owner)
-      {
-        revert();
-      }
-      else if(balanceOf(sender) < amount)
+    function transfer(address sender,address receiver, uint256 amount, bytes data) public onlyOwner returns(bool) {
+    if(balanceOf(sender) < amount)
         {
             revert();
         }
@@ -127,36 +91,24 @@ contract mintable is tokenInterface {
         }
     }
 
-    function transfer(address sender,address receiver, uint256 amount) public returns(bool) {
-      if(msg.sender!=_owner)
-      {
-        revert();
-      }
-      else
-      {
+    function transfer(address sender,address receiver, uint256 amount) public onlyOwner returns(bool) {
+
         bytes memory empty;
         //use ERC223 transfer function
         bool gotTransfered = transfer(sender,receiver, amount, empty);
 
         if (gotTransfered)
-        return true;
+          return true;
         else
-        return false;
-      }
+          return false;
+
     }
 
-    function burn(address sender,uint256 amount) public returns(bool) {
-        if(msg.sender!=_owner)
-        {
-          revert();
-        }
-        //Safety check : amount of tokens being burned have to be larger than 0
-        else if (amount<=0)
-        {
-            revert();
-        }
+    function burn(address sender,uint256 amount) public onlyOwner returns(bool) {
+
+
         //Safty check : token owner cannot burn more than the amount currently exists in their address
-        else if(_balances[sender] < amount)
+       if(_balances[sender] < amount)
         {
             revert();
         }
@@ -177,5 +129,16 @@ contract mintable is tokenInterface {
             length: = extcodesize(addr)
         }
         return (length > 0);
+    }
+    modifier onlyOwner
+    {
+      if(msg.sender!=_owner)
+      {
+        revert();
+      }
+      else
+      {
+        _;
+      }
     }
 }

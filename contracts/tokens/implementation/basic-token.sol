@@ -20,52 +20,27 @@ contract basic is tokenInterface {
         _balances[_owner] = totalSupply;
         _totalSupply = totalSupply;
     }
-    function get_address() returns (address) {
-      if(msg.sender!=_owner)
-      {
-        revert();
-      }
-      else
-      {
+    function get_address() public onlyOwner returns (address) {
         return address(this);
-      }
+
     }
-    function balanceOf(address addr) public view returns(uint256) {
-      if(msg.sender!=_owner)
-      {
-        revert();
-      }
-      else
-      {
+    function balanceOf(address addr) public view onlyOwner returns(uint256) {
+
         return _balances[addr];
-      }
+
     }
-    function getOwner() public returns(address) {
-      if(msg.sender!=_owner)
-      {
-        revert();
-      }
-      else
-      {
+    function getOwner() public onlyOwner returns(address) {
+
         return _owner;
-      }
+
     }
-    function totalSupply() public view returns(uint256) {
-      if(msg.sender!=_owner)
-      {
-        revert();
-      }
-      else
-      {
+    function totalSupply() public view onlyOwner returns(uint256) {
+
         return _totalSupply;
-      }
+
     }
-    function transfer(address sender,address receiver, uint256 amount, bytes data) public returns(bool) {
-      if(msg.sender!=_owner)
-        {
-          revert();
-        }
-        else if(balanceOf(sender) < amount)
+    function transfer(address sender,address receiver, uint256 amount, bytes data) public onlyOwner returns(bool) {
+     if(balanceOf(sender) < amount)
         {
             revert();
         }
@@ -99,13 +74,8 @@ contract basic is tokenInterface {
 
 
 
-    function transfer(address sender,address receiver, uint256 amount) public returns(bool) {
-        if(msg.sender!=_owner)
-        {
-          revert();
-        }
-        else
-        {
+    function transfer(address sender,address receiver, uint256 amount) public onlyOwner returns(bool) {
+
           bytes memory empty;
           //use ERC223 transfer function
           bool gotTransfered = transfer(sender,receiver, amount, empty);
@@ -113,37 +83,20 @@ contract basic is tokenInterface {
           return true;
           else
           return false;
-        }
+
     }
 
-    function mint(address tokenAddress,address receiver, uint256 amount) public returns(bool)
+    function mint(address tokenAddress,address receiver, uint256 amount) public onlyOwner returns(bool)
     {
-      if(msg.sender!=_owner)
-      {
-        revert();
-      }
-      else
-      {
         transfer(tokenAddress,receiver, amount);
-      }
     }
 
-    function burn(address owner,uint256 amount) public returns(bool) {
-        if(msg.sender!=_owner)
-        {
-          revert();
-        }
-        //Safety check : amount of tokens being burned have to be larger than 0
-        if (amount<=0)
-        {
-            revert();
-        }
+    function burn(address owner,uint256 amount) public onlyOwner returns(bool) {
 
-        //TODO Check for _owner
 
         //Safty check : token owner cannot burn more than the amount currently exists in their address
 
-        else if(_balances[owner] < amount)
+        if(_balances[owner] < amount)
         {
             revert();
         }
@@ -165,6 +118,17 @@ contract basic is tokenInterface {
             length: = extcodesize(addr)
         }
         return (length > 0);
+    }
+    modifier onlyOwner
+    {
+      if(msg.sender!=_owner)
+      {
+        revert();
+      }
+      else
+      {
+        _;
+      }
     }
 
 }

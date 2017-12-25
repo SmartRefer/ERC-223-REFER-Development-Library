@@ -55,13 +55,6 @@ contract('tokenTest', function(accounts) {
             .should.be.rejected
 
       });
-      it('should throw an error when trying to burn 0 or smaller amount of tokens', async function() {
-        this.timeout(4500000);
-        await token.mint(accounts[1], 500);
-          await token.burn(0, { from: accounts[1] })
-            .should.be.rejected
-
-      });
 
       it('should throw an error when trying to burn more than owners balance', async function() {
         this.timeout(4500000);
@@ -140,12 +133,7 @@ contract('tokenTest', function(accounts) {
           await token.transfer(0x0, 100,{from:accounts[1]})
             .should.be.rejected
         });
-        it('should throw an error when trying to burn 0 or smaller amount of tokens', async function() {
-          this.timeout(4500000);
-          await token.mint(accounts[1], 200);
-          await token.burn(0, { from: accounts[1] })
-            .should.be.rejected
-        });
+
 
         it('should throw an error when trying to burn more than owners balance', async function() {
           this.timeout(4500000);

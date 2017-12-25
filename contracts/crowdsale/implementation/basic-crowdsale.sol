@@ -8,7 +8,7 @@ import "../../tokens/token.sol";
  */
  //TODO add owner checks
  //TODO add cap
-contract basicCrowdsale is crowdsaleInterface {
+contract simpleCrowdsale is crowdsaleInterface {
   using SafeMath for uint256;
 
   //State
@@ -17,29 +17,35 @@ contract basicCrowdsale is crowdsaleInterface {
   address private _wallet;
   address private _owner;
   uint256 private _weiRaised;
-  uint256 private _tokensIssued;
+  uint256 private _tokenSold;
+  uint256 private _cap;
+  uint256 private _rate;
   token private _token;
-  bool private isFinalized = false;
+  bool private _finalized = false;
 
 
 
 
-  function basicCrowdsale(uint256 startTime, uint256 endTime,string symbol, string name, uint8 decimals, uint256 totalSupply) public
+  function simpleCrowdsale(uint256 startTime, uint256 endTime,string symbol, string name, uint8 decimals, uint256 totalSupply,uint256 cap , uint256 rate) public
   {
     if (startTime < now) {
         revert();
     } else if (endTime < now || endTime < startTime) {
         revert();
     } else {
-        _startTime = startTime;
-        _endTime = endTime;
-        _owner = msg.sender;
+      _startTime = startTime;
+      _endTime = endTime;
+      _cap = cap;
+      _rate = rate;
+      _tokenSold = 0;
+      _weiRaised = 0;
+      _owner = msg.sender;
+      _token = new token(symbol, name, decimals, totalSupply);
     }
-    _token = new token(symbol, name, decimals, totalSupply);
 
   }
   //check for valid purchase
-  function buyTokens(address receiver,uint256 weiAmount) public onlyOwner returns(uint256)
+  function buyTokens(address receiver,uint256 weiAmount) public onlyOwner isFinalized returns(uint256)
   {
 
       validPurchase();
@@ -59,48 +65,51 @@ contract basicCrowdsale is crowdsaleInterface {
           // Finding total amount that uas to get transferred
           uint256 rate = getRate();
           uint256 tokens = weiAmount.mul(rate);
-
-          _token.mint(receiver, tokens);
-          return tokens;
+          _tokenSold = _tokenSold.add(tokens);
+          if(_tokenSold>_cap)
+          {
+            revert();
+          }
+          else
+          {
+            _token.mint(receiver, tokens);
+            return tokens;
+          }
       }
   }
-  function finalize() public onlyOwner returns(bool)
+  function finalize() public onlyOwner isFinalized returns(bool)
   {
 
-      //Safety Check : make sure the contact hasn't been finalized yet
-      if (isFinalized == true) {
-          revert();
-      }
+
       //Safety Check : make sure current time is passed set end time of crowdsale
-      else if (now < _endTime) {
+      if (now < _endTime) {
           revert();
       }
       else
       {
           //Finalize mechanism : if there are tokens remaining, burn them.
           _token.finalize();
-          isFinalized = true;
+          _finalized = true;
           return true;
       }
 
   }
-  function getToken() public returns(address)
+  function getToken() public onlyOwner returns(address)
   {
     return address(_token);
   }
-  function getOwner() public returns(address)
+  function getOwner() public  onlyOwner returns(address)
   {
     return _owner;
   }
-  function getAddress() public returns(address)
+  function getAddress() public  onlyOwner returns(address)
   {
     return address(this);
   }
 
-  function getRate() public returns(uint256)
+  function getRate() public  onlyOwner returns(uint256)
   {
-    uint256 rate = 50;
-    return rate;
+    return _rate;
   }
 
     /*
@@ -121,7 +130,7 @@ contract basicCrowdsale is crowdsaleInterface {
         {
           revert();
         }
-        else if (isFinalized == true)
+        else if (_finalized == true)
         {
             revert();
         }
@@ -144,4 +153,16 @@ contract basicCrowdsale is crowdsaleInterface {
         _;
       }
     }
+    modifier isFinalized
+    {
+      if(_finalized==true)
+      {
+        revert();
+      }
+      else
+      {
+        _;
+      }
+    }
+
 }
