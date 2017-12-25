@@ -34,6 +34,17 @@ For instance, when users send the tokens to the token's contract by mistake, the
 - [x] Implementation of a token safe conract (token lock-up mechanism) as an example of an ERC223 reciever contract
 - [x] Token Safe tests.
 - [x] Some housekeeping on the tests
+- [x] re-written contracts based on bridge design pattern
+- [x] re-written test cases for the new contract
+- [ ] write test for cases where users are directly accessing implementor interface child contracts
+- [ ] write contract for hybrid token.
+- [ ] add multi-tiered crowdsale.
+- [ ] add crowdsale with refund option if the target was not met.
+- [ ] modify the existing crowdsale contract to have an uncapped function.
+- [ ] update reciever contract so it would offer a withdraw option.
+- [ ] add an adapter pattern inspired contract for accepting ERC20 tokens.
+- [ ] write new test cases.
+- [ ] deploy and test on live testnet.
 # Credit
 * Zeppelin Solutions: https://github.com/OpenZeppelin/zeppelin-solidity
 * @Dexaran ERC223 Proposal: https://github.com/Dexaran/ERC223-token-standard
