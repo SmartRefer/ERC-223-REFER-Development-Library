@@ -16,7 +16,7 @@ For instance, when users send the tokens to the token's contract by mistake, the
   
   
 #### Only The Essential Smart Contracts 
-* By researching more than 15 crowdsales, we took note of the most common patterns and design choices. We have completely restructured, and implemented them in our library. 
+* By researching more than 30 crowdsales, we took note of the most common patterns and design choices. We have completely restructured, and implemented them in our library. 
 * Our library and contracts are fully backward compatible with the ERC20 standard; we decided to run a rewritten version of Zeppelin Solution test cases on our library to confirm that. 
 # How to use
 * Smart contracts in "abstract-classes" folder are all abstract contracts, and most of the comments are in those files. If you are using this library as learning material, go to that folder first, understand what is the purpose of each function and afterward start implementing it yourself. Make sure to run the tests to make sure your implementation is correct.
