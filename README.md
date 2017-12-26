@@ -45,6 +45,7 @@ For instance, when users send the tokens to the token's contract by mistake, the
 - [ ] add an adapter pattern inspired contract for accepting ERC20 tokens.
 - [ ] write new test cases.
 - [ ] deploy and test on live testnet.
+- [ ] update comments
 # Credit
 * Zeppelin Solutions: https://github.com/OpenZeppelin/zeppelin-solidity
 * @Dexaran ERC223 Proposal: https://github.com/Dexaran/ERC223-token-standard
