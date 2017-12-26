@@ -19,7 +19,7 @@ For instance, when users send the tokens to the token's contract by mistake, the
 * By researching more than 30 crowdsales, we took note of the most common patterns and design choices. We have completely restructured, and implemented them in our library. 
 * Our library and contracts are fully backward compatible with the ERC20 standard; we decided to run a rewritten version of Zeppelin Solution test cases on our library to confirm that. 
 # How to use
-* Bridge design pattern has been usedin implementing crowdsale, receiver and token contracts
+* Bridge design pattern has been used in implementing crowdsale, receiver and token contracts
 * We decided to create two token type and corresponding crowdsale boilerplates:
   * Token smart contracts are designed and initialized inside Crowdsale smart contracts.
   * Basic Token and Basic Crowdsale: In this token, you would set the total number of tokens in Tokens constructor. After the crowdsale is over, the Crowdsale contract's owner has to call Crowdsale contract's finalize() function, burning any remaining tokens.Only Crowdsale contract's owner is allowed to call that function.A suggestion is to use Oraclize or Ethereum Alarm clock to call this function after ICO is over automatically.
