@@ -35,6 +35,7 @@ For instance, when users send the tokens to the token's contract by mistake, the
 - [x] re-written test cases for the new contract
 - [ ] write test for cases where users are directly accessing implementor interface child contracts
 - [ ] write contract for hybrid token.
+- [ ] make tokens upgradable ( for instance , ERC223 initially , then upgradable to Bancor smart token or another token standard ) 
 - [ ] add multi-tiered crowdsale.
 - [ ] add crowdsale with refund option if the target was not met.
 - [ ] modify the existing crowdsale contract for dynamic cap implementation.
