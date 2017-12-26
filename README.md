@@ -31,8 +31,6 @@ For instance, when users send the tokens to the token's contract by mistake, the
 - [x] Mintable token
 - [x] Mintable token crowdsale
 - [x] re-write Zeppelin solution tests and confirm erc20 compatiblity
-- [x] Implementation of a token safe conract (token lock-up mechanism) as an example of an ERC223 reciever contract
-- [x] Token Safe tests.
 - [x] Some housekeeping on the tests
 - [x] re-written contracts based on bridge design pattern
 - [x] re-written test cases for the new contract
