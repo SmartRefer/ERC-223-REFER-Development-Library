@@ -1,4 +1,4 @@
-SmartRefer's Crowdsale Factory is a collection of smart contracts made for Ethereum-based crowdsales, using the ERC223 standard.
+SmartRefer's ERC223-crowdsale-templates is a collection of smart contracts made for Ethereum-based crowdsales, using the ERC223 standard.
 Before launching our platform's Pre-Sale, we did exhaustive technical research on different patterns of launching various crowdsales, different contract types and the most common issues encountered. Currently, there are no crowdsale boilerplates based on the ERC223 standard. We decided to build the world's first comprehensive ERC223 library to help other Ethereum-based projects fast-track their development. Our work is based on the original ERC223 standard proposed by @dexaran. Our code was heavily inspired by Zeppelin Solutions library.
 
 We tried to be as thorough as possible while writing comments so that this could be a valuable learning resource for programmers transition into learning solidity.
