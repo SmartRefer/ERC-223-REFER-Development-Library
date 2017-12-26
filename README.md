@@ -40,7 +40,7 @@ For instance, when users send the tokens to the token's contract by mistake, the
 - [ ] write contract for hybrid token.
 - [ ] add multi-tiered crowdsale.
 - [ ] add crowdsale with refund option if the target was not met.
-- [ ] modify the existing crowdsale contract to have an uncapped function.
+- [ ] modify the existing crowdsale contract for dynamic cap implementation.
 - [ ] update reciever contract so it would offer a withdraw option.
 - [ ] add an adapter pattern inspired contract for accepting ERC20 tokens.
 - [ ] write new test cases.
