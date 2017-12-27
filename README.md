@@ -5,7 +5,7 @@ Our work is based on the original ERC223 standard proposed by @dexaran (GitHub).
 
 While planning our platform's impending Pre-Sale (January 18th, 2017), we did exhaustive technical research on different patterns of launching various crowdsales, different contract types and the most common issues encountered. By researching more than 30 crowdsales, we took note of the most common patterns and design choices. We have completely restructured, and implemented them in our library.
 
-Our library and contracts are fully backward compatible with the ERC-20 standard; we decided to run a rewritten version of Zeppelin Solution test cases on our library to confirm that. Additionally, we tried to be as thorough as possible while writing comments so that this could be a valuable learning resource for programmers transition into learning solidity.
+Our library and contracts are fully backward compatible with the ERC-20 standard; we decided to run a rewritten version of Zeppelin Solution test cases on our library to confirm that. Additionally, we tried to be as thorough as possible while writing comments so that this could be a valuable learning resource for programmers transition into learning Solidity.
 # Advantages
 #### ERC223 was chosen because it has the following features:
 * Allows contract developers to handle incoming token transactions same way as they would treat an Ether transaction due to a tokenFallback() function.
