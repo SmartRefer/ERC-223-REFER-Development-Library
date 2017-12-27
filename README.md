@@ -1,7 +1,11 @@
-SmartRefer's ERC223-crowdsale-templates is a collection of smart contracts made for Ethereum-based crowdsales, using the ERC223 standard.
-Before launching our platform's Pre-Sale, we did exhaustive technical research on different patterns of launching various crowdsales, different contract types and the most common issues encountered. Currently, there are no crowdsale boilerplates based on the ERC223 standard. We decided to build the world's first comprehensive ERC223 library to help other Ethereum-based projects fast-track their development. Our work is based on the original ERC223 standard proposed by @dexaran. Our code was heavily inspired by Zeppelin Solutions library.
+SmartRefer's Crowdsale Factory is a collection of smart contracts made for Ethereum-based crowdsales, using the ERC-223 standard. We decided to build the world's first comprehensive, easy to follow, ERC-223 library to help other Ethereum-based projects fast-track their development. 
 
-We tried to be as thorough as possible while writing comments so that this could be a valuable learning resource for programmers transition into learning solidity.
+Currently, there are no other complete crowdsale boilerplates based on the ERC-223 standard. 
+Our work is based on the original ERC223 standard proposed by @dexaran (GitHub). Our code was heavily inspired by Zeppelin Solutions library.
+
+While planning our platform's impending Pre-Sale (January 18th, 2017), we did exhaustive technical research on different patterns of launching various crowdsales, different contract types and the most common issues encountered. By researching more than 30 crowdsales, we took note of the most common patterns and design choices. We have completely restructured, and implemented them in our library.
+
+Our library and contracts are fully backward compatible with the ERC-20 standard; we decided to run a rewritten version of Zeppelin Solution test cases on our library to confirm that. Additionally, we tried to be as thorough as possible while writing comments so that this could be a valuable learning resource for programmers transition into learning solidity.
 # Advantages
 #### ERC223 was chosen because it has the following features:
 * Allows contract developers to handle incoming token transactions same way as they would treat an Ether transaction due to a tokenFallback() function.
