@@ -26,7 +26,7 @@ For instance, when users send the tokens to the token's contract by mistake, the
 * Bridge design pattern has been used in implementing crowdsale, receiver and token contracts
 * We decided to create two token type and corresponding crowdsale boilerplates:
   * Token smart contracts are designed and initialized inside Crowdsale smart contracts.
-  * Basic Token and Basic Crowdsale: In this token, you would set the total number of tokens in Tokens constructor. After the crowdsale is over, the Crowdsale contract's owner has to call Crowdsale contract's finalize() function, burning any remaining tokens.Only Crowdsale contract's owner is allowed to call that function.A suggestion is to use Oraclize or Ethereum Alarm clock to call this function after ICO is over automatically.
+  * Basic Token and Basic Crowdsale: In this token, you would set the total number of tokens in Tokens constructor. After the crowdsale is over, the Crowdsale contract's owner has to call Crowdsale contract's finalize() function, burning any remaining tokens.Only Crowdsale contract's owner is allowed to call that function.A suggestion is to use Oraclize or Ethereum Alarm clock to call this function after Crowdsale is over automatically.
   * Mintable Token and Mintable Crowdsale: In this token type, initially, the total number of tokens is set to zero. As the Mintable crowdsale receives Ether, it would invoke Mintable Tokens Mint() function to create tokens; this would eliminate the need for burning the remaining tokens after the crowdsale is over. Also, it should be noted that only mintable token's owner ( Mintable Crowdsale smart contract ) is allowed to call the Mint() function.
 # Todo
 - [x] Basic Token
