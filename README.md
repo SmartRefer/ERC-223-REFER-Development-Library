@@ -28,6 +28,10 @@ For instance, when users send the tokens to the token's contract by mistake, the
   * Token smart contracts are designed and initialized inside Crowdsale smart contracts.
   * Basic Token and Basic Crowdsale: In this token, you would set the total number of tokens in Tokens constructor. After the crowdsale is over, the Crowdsale contract's owner has to call Crowdsale contract's finalize() function, burning any remaining tokens.Only Crowdsale contract's owner is allowed to call that function.A suggestion is to use Oraclize or Ethereum Alarm clock to call this function after Crowdsale is over automatically.
   * Mintable Token and Mintable Crowdsale: In this token type, initially, the total number of tokens is set to zero. As the Mintable crowdsale receives Ether, it would invoke Mintable Tokens Mint() function to create tokens; this would eliminate the need for burning the remaining tokens after the crowdsale is over. Also, it should be noted that only mintable token's owner ( Mintable Crowdsale smart contract ) is allowed to call the Mint() function.
+# Known Issue
+Some disrepencies between ERC20/ERC223 naming convention causes my etherwallet not to recognize the tokens as compatible.
+the logic works perfectly
+**This issue has been fixed in Smartrefer Crowdsale contract and the tokens are recognized by ERC20 wallets**
 # Todo
 - [x] Basic Token
 - [x] Basic Token crowdsale
